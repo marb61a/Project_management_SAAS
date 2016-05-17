@@ -3,6 +3,7 @@ require File.expand_path('../application', __FILE__)
 
 # Initialize the Rails application.
 Rails.application.initialize!
+<<<<<<< HEAD
 
 ActionMailer::Base.smtp_settings = {
 :address => 'smtp.sendgrid.net',
@@ -14,3 +15,5 @@ ActionMailer::Base.smtp_settings = {
 :enable_starttls_auto => true
 }
 
+=======
+>>>>>>> parent of f072d6a... added sendgrid and deployed to heroku
