@@ -1,4 +1,6 @@
 class ConfirmationsController < Milia::ConfirmationsController
+    before_action :set_confirmable, only: [:update, :show]
+    
     def update
         
     end
@@ -29,4 +31,17 @@ class ConfirmationsController < Milia::ConfirmationsController
             # else fall thru to show template which is form to set a password
             # upon SUBMIT, processing will continue from update
     end
+    
+    def after_confirmation_path_for(resource_name, resource)
+        if user_signed_in?
+          root_path
+        else
+          new_user_session_path
+        end
+    end
+    
+    private
+        def set_confirmable
+            @confirmable = User.find_or_initialize_with_error_by(:confirmation_token, params[:confirmation_token])    
+        end
 end
