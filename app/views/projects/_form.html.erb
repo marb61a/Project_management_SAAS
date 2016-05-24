@@ -11,23 +11,30 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :title %><br>
-    <%= f.text_field :title %>
+  <div class="control-group">
+    <%= f.label :title, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, autofocus: true, :class => 'form-control' %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :details %><br>
-    <%= f.text_field :details %>
+
+  <div class="control-group">
+    <%= f.label :details, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :details, :class => 'form-control' %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :expected_completion_date %><br>
-    <%= f.date_select :expected_completion_date %>
+
+  <div class="control-group">
+    <%= f.label :expected_completion_date, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :expected_completion_date, :class => 'form-control datepicker' %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :tenant_id %><br>
-    <%= f.text_field :tenant_id %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  <br />
+
+  <%= f.hidden_field :tenant_id, value: params[:tenant_id], class: 'form-control' %>
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  
 <% end %>

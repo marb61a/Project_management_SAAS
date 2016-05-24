@@ -1,6 +1,7 @@
 default: &default
       adapter: postgresql
       encoding: unicode
+      database: nu_sass
       pool: 5
       username: <%= ENV['USERNAME'] %>
       password: <%= ENV['PASSWORD'] %>
