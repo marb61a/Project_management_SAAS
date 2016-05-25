@@ -1,5 +1,8 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy]
+  before_action :set_project, only: [:show, :edit, :update, :destroy, :users, :add_user]
+  before_action :set_tenant, except: [:index]
+  before_action :verify_tenant
+
 
   # GET /projects
   # GET /projects.json
@@ -70,5 +73,16 @@ class ProjectsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
       params.require(:project).permit(:title, :details, :expected_completion_date, :tenant_id)
+    end
+    
+    def set_tenant
+      @tenant = Tenant.find params[:tenant_id]
+    end
+    
+    def verify_tenant
+      return if params[:tenant_id] == Tenant.current_tenant_id.to_s
+      
+      redirect_to :root,
+                flash: { error: 'You are not allowed to view projects outside your organisation' }
     end
 end
