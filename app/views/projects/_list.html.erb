@@ -1,4 +1,27 @@
 <%- model_class = Project -%>
 <% if @projects.any? %>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th><%= model_class.human_attribute_name(:title) %></th>
+                <th><%= model_class.human_attribute_name(:details) %></th>
+                <th><%= model_class.human_attribute_name(:expected_completion_date) %></th>
+                <th><%=t '.actions', :default => t("helpers.actions") %></th>
+            </tr>    
+        </thead>
+        <tbody>
+            <% @projects.each do |project|%>
+                <tr>
+                    
+                </tr>
+            <%end%>
+        </tbody>
+    </table>
 <% else %>
+
 <% end %>
+
+<% if %>
+    <%= link_to 'New project', new_tenant_project_path(tenant_id: @tenant.id),
+              :class => 'btn btn-primary' %>
+<% else %>
