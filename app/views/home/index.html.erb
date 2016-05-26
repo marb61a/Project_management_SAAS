@@ -1,5 +1,10 @@
 <% if current_user %>
-    <h3>Organization: <%= @tenant.name %></h3>
+    <div class="page-header">
+        <h3 class="pull-right">Organization: <%= @tenant.name %></h3>
+        <h1>Projects</h1>
+    </div>
+    
+    <%= render 'projects/list' %>
 <% else %>
 
 <div class="jumbotron">
