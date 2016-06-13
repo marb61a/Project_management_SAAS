@@ -1,3 +1,10 @@
+footer {
+    margin-top: 20px;
+    color: #777;
+    border-top: 1px solid #eaeaea;
+    padding: 10px 10px 5px 10px;
+}
+
 .user-name {
     padding: 0 !important ;
     padding-left: 5px;
@@ -134,11 +141,17 @@ a:hover, a:focus {
   color: red;
   padding: 6px;
 }
+
 .logout {
   padding-left: 0;
 }
+
 .navbar.navbar-static-top {
   background: #000;
   color: #fff !important;
   padding-bottom: 5px;
+}
+
+.devise-link {
+    color: #0000e0;
 }

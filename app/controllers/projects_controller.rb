@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
   # GET /projects
   # GET /projects.json
   def index
-    @projects = Project.all
+    @projects = Project.by_user_plan_and_tenant(params[:tenant_id], current_user)
   end
 
   # GET /projects/1
@@ -40,14 +40,10 @@ class ProjectsController < ApplicationController
   # PATCH/PUT /projects/1
   # PATCH/PUT /projects/1.json
   def update
-    respond_to do |format|
-      if @project.update(project_params)
-        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
-        format.json { render :show, status: :ok, location: @project }
-      else
-        format.html { render :edit }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
-      end
+    if @project.update(project_params)
+      redirect_to root_url, notice: 'Project was successfully updated.'
+    else
+      render :edit
     end
   end
 
@@ -59,6 +55,11 @@ class ProjectsController < ApplicationController
       format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+  
+  def users
+    @project_users = (@project.users + (User.where(tenant_id: @tenant.id, admin: true))) - [current_user]
+    @other_users   = @tenant.users.where(admin: false) - (@project_users + [current_user])
   end
 
   private
