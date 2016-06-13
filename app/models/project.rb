@@ -6,6 +6,14 @@ class Project < ActiveRecord::Base
   has_many :users, through: :user_projects
   
   validates_uniqueness_of :title
+  validate :free_plan_can_only_have_one_project
+  
+  def free_plan_can_only_have_one_project
+    return unless self.new_record? &&
+                  tenant.projects.count > 0 && tenant.plan == 'free'
+
+    errors.add(:base, 'Free plans can only have one project')
+  end
   
   def self.by_user_plan_and_tenant(tenant_id, user)
         tenant = Tenant.find tenant_id
