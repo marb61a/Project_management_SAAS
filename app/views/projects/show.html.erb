@@ -1,9 +1,12 @@
-
+<% model_class = Project %>
 <div class="page-header">
   <h3><%= @project.title %></h3>
   <h3><small>Organisation - <%= tenant_name @project.tenant_id %></small></h3>
 </div
 
+<h3>Artifacts</h3>
+<%= render 'artifacts/list', artifacts: @project.artifacts %>
+<br />
 
 <%= link_to '< Back to Organization Home', root_path, :class => 'btn btn-default' %>
 
