@@ -1,10 +1,23 @@
+<script>
+  Stripe.setPublishableKey("<%= ENV['STRIPE_TEST_PUBLISHABLE_KEY'] %>");
+</script>
+
+<p class="text-center text-primary">
+  <small>
+    Sign up now for either a free or premium plan.
+    You will have to use a real email address in 
+    order to receive the confirmation email,
+    but see below about using credit cards.
+  </small>
+</p>
+
 <%= bootstrap_devise_error_messages! %>
 <div class="panel panel-default">
   <div class="panel-heading">
     <h4><%= t('.sign_up', :default => "Sign up") %></h4>
   </div>
   <div class="panel-body">
-    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), html: { role: "form" }) do |f| %>
+    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), html: { role: "form", class: 'cc_form' }) do |f| %>
       <div class="form-group">
         <%= f.label :email %>
         <%= f.email_field :email, autofocus: true, class: "form-control" %>
@@ -27,6 +40,13 @@
           <%= w.label :plan %>
           <%= w.select :plan, options_for_select(Plan.options, params[:plan]),{}, required: true, class: "form-control" %>
         </div>
+        <%= fields_for(:payment) do |p| %>
+          <p class="text-center text-danger">
+            <small>Do Not use a real Credit Card Number For Security Reasons.</small>
+          </p>
+          <div class="row">
+          </div>
+        <% end %>
       <% end %>
       <%= f.submit t('.sign_up', :default => "Sign up"), class: "btn btn-primary" %>
     <% end %>
