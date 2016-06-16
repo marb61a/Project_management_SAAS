@@ -1,20 +1,28 @@
 <div class="page-header">
-    <h3>Users for Project <%= @project.title %></h3>
-    <strong>(Other than yourself)</strong>
+  <h3>Users for project <%= @project.title %> <small>(other than yourself}</small></h3>
 </div>
 
 <table class="table table-striped">
-    <thead>
-        <tr>
-          <th>Email</th>
-          <th><%=t '.actions', :default => t("helpers.actions") %></th>
-        </tr>
-    </thead>
-    <tbody>
-        <% @project_users.each do |project_user| %>
-            <tr>
-                
-            </tr>
-        <% end %>
-    </tbody>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th><%= t '.actions', default: t('helpers.actions') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @project_users.each do |user| %>
+    <tr>
+      <td><%= user.email %></td>
+      <% if !user.admin? %>
+      <td>
+        <%= link_to 'Remove',
+                    user_project_path(user.user_projects.find_by(project_id: @project.id), tenant_id: @project.tenant_id),
+                    method: :delete,
+                    data: { confirm: t('.confirm', default: t('helpers.links.confirm', default: 'are you sure?')) },
+                    class: 'btn btn-danger btn-xs' %>
+      </td>
+      <% end -%>
+    </tr>
+    <% end %>
+  </tbody>
 </table>
