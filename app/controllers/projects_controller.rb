@@ -30,20 +30,24 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
     @project.users << current_user
 
-    if @project.save
-      redirect_to root_url, notice: 'Project was successfully created.'
-    else
-      render :new
+    respond_to do |format|
+      if @project.save
+        format.html { redirect_to root_url, notice: 'Project was successfully created.' }
+      else
+        format.html { render :new }
+      end
     end
   end
 
   # PATCH/PUT /projects/1
   # PATCH/PUT /projects/1.json
   def update
-    if @project.update(project_params)
-      redirect_to root_url, notice: 'Project was successfully updated.'
-    else
-      render :edit
+    respond_to do |format|
+      if @project.update(project_params)
+        format.html { redirect_to root_url, notice: 'Project was successfully updated.' }
+      else
+        format.html { render :edit }
+      end
     end
   end
 
@@ -53,13 +57,27 @@ class ProjectsController < ApplicationController
     @project.destroy
     respond_to do |format|
       format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
-      format.json { head :no_content }
     end
   end
   
   def users
     @project_users = (@project.users + (User.where(tenant_id: @tenant.id, admin: true))) - [current_user]
     @other_users   = @tenant.users.where(admin: false) - (@project_users + [current_user])
+  end
+  
+  def add_user
+    @project_user = UserProject.new(user_id: params[:user_id], project_id: @project.id)
+    respond_to do |format|
+      if @project_user.save
+        format.html { redirect_to users_tenant_project_url(id: @project.id,
+                                        tenant_id: @project.tenant_id),
+                                        notice: 'User was successfully added to project' }
+      else
+        format.html { redirect_to users_tenant_project_url(id: @project.id,
+                                        tenant_id: @project.tenant_id),
+                                        error: 'User was not added to project' }
+      end
+    end
   end
 
   private
