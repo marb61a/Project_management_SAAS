@@ -74,5 +74,36 @@ class RegistrationsController < Milia::RegistrationsController
             # then flag for our confirmable that we won't need to set up a password
             resource.skip_confirm_change_password = true
         end
+        
+        if resource.save
+            yield resource if block_given?
+            log_action 'devise: signup user success', resource
+            if resource.active_for_authentication?
+                set_flash_message :notice, :signed_up if is_flashing_format?
+                sign_up(resource_name, resource)
+                respond_with resource, location: after_sign_up_path_for(resource)
+            else
+                set_flash_message :notice, :"signed_up_but_#{resource.inactive_message}" if is_flashing_format?
+                expire_data_after_sign_in
+                respond_with resource, location: after_inactive_sign_up_path_for(resource)
+            end
+        else
+            clean_up_passwords resource
+            log_action 'devise: signup user failure', resource
+            prep_signup_view @tenant, resource, params[:coupon]
+            respond_with resource
+        end
     end
+    
+    def after_sign_up_path_for(_resource)
+        headers['refresh'] = "0;url=#{root_path}"
+        root_path
+    end
+    
+    def after_inactive_sign_up_path_for(_resource)
+        headers['refresh'] = "0;url=#{root_path}"
+        root_path
+    end
+    
+    
 end
