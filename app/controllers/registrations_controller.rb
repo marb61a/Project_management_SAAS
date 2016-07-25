@@ -37,8 +37,42 @@ class RegistrationsController < Milia::RegistrationsController
         end
         
         def sign_up_params_tenant()
+            params.require(:tenant).permit ::Milia.whitelist_tenant_params
         end
         
         def sign_up_params_user()
+            params.require(:user).permit ::Milia.whitelist_user_params
         end
+        
+    # -------------------------------------------------------------------------
+    # sign_up_params_coupon -- permit coupon parameter if used; else params
+    # -------------------------------------------------------------------------
+    def sign_up_params_coupon
+        if condition
+            params.require(:coupon).permit ::Milia.whitelist_coupon_params
+        else
+            params
+        end
+    end
+    
+    # -------------------------------------------------------------------------
+    # sign_out_session! -- force the devise session signout
+    # -------------------------------------------------------------------------
+    def sign_out_session!
+        Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name) if user_signed_in?
+    end
+    
+    # -------------------------------------------------------------------------
+    # devise_create -- duplicate of Devise::RegistrationsController
+    # same as in devise gem EXCEPT need to prep signup form variables
+    # -------------------------------------------------------------------------
+    def devise_create(user_params)
+        build_resource(user_params)
+        
+        # if we're using milia's invite_member helpers
+        if ::Milia.use_invite_member
+            # then flag for our confirmable that we won't need to set up a password
+            resource.skip_confirm_change_password = true
+        end
+    end
 end
