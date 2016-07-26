@@ -1,0 +1,20 @@
+<%- model_class = Artifact -%>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th><%= model_class.human_attribute_name(:name) %></th>
+            <th><%= model_class.human_attribute_name(:key) %></th>
+            <th><%=t '.actions', :default => t("helpers.actions") %></th>
+        </tr>    
+    </thead>
+    <tbody>
+        <% artifacts.each do |artifact| %>
+            <tr>
+                <td><%= link_to artifact.name, artifact_path(artifact), class: "main-link" %></td>    
+            </tr>
+        <%end%>
+    </tbody>
+</table>
+<% if @project %>
+    <%= link_to "New Artifact", new_artifact_path(project_id: @project.id), :class => 'btn btn-primary' %>
+<%end%>
