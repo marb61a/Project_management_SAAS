@@ -34,10 +34,28 @@ class RegistrationsController < Milia::RegistrationsController
                     )
                     
                     flash[:error] = 'Please check registrations error' unless @payment.valid?
+                    begin
+                        @payment.process_payment
+                        @payment.save
+                    rescue StandardError => err
+                        flash[:error] = err.message
+                        @tenant.destroy
+                        log_action 'Payment failed'
+                        render :new
+                    return
+                    end
                 end
+            else
+                resource.valid?
+                log_action 'tenant create failed', @tenant
+                render :new
             end
-        else
             
+            if condition
+                
+            else
+                
+            end
         end
     end
     
